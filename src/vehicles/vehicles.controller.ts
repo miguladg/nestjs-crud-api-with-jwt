@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
-import { Vehicle } from '@prisma/client';
+import { Vehicle } from './vehicle.entity';
 
 @Controller('vehicles')
 export class VehiclesController {
@@ -18,6 +18,8 @@ export class VehiclesController {
 
   @Post()
   create(@Body() data: Omit<Vehicle, 'id' | 'createdAt'>): Promise<Vehicle> {
+    console.log('🚗 [Controller] POST /vehicles - Iniciando creación de vehículo');
+    console.log('🚗 [Controller] Datos recibidos:', data);
     return this.vehiclesService.create(data);
   }
 

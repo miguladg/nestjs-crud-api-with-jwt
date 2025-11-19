@@ -1,28 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { Vehicle } from '@prisma/client';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Vehicle } from './vehicle.entity';
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Vehicle)
+    private vehicleRepository: Repository<Vehicle>,
+  ) {}
 
   findAll(): Promise<Vehicle[]> {
-    return this.prisma.vehicle.findMany();
+    return this.vehicleRepository.find();
   }
 
   findOne(id: number): Promise<Vehicle | null> {
-    return this.prisma.vehicle.findUnique({ where: { id } });
+    return this.vehicleRepository.findOne({ where: { id } });
   }
 
-  create(data: Omit<Vehicle, 'id' | 'createdAt'>): Promise<Vehicle> {
-    return this.prisma.vehicle.create({ data });
+  async create(data: Omit<Vehicle, 'id' | 'createdAt'>): Promise<Vehicle> {
+    console.log('Iniciando guardado en base de datos');
+    console.log('Datos a guardar:', data);
+    const result = await this.vehicleRepository.save(data);
+    console.log('Vehículo guardado exitosamente:', result);
+    return result;
   }
 
-  update(id: number, data: Partial<Vehicle>): Promise<Vehicle> {
-    return this.prisma.vehicle.update({ where: { id }, data });
+  async update(id: number, data: Partial<Vehicle>): Promise<Vehicle> {
+    await this.vehicleRepository.update(id, data);
+    return this.findOne(id);
   }
 
-  delete(id: number): Promise<Vehicle> {
-    return this.prisma.vehicle.delete({ where: { id } });
+  async delete(id: number): Promise<Vehicle> {
+    const vehicle = await this.findOne(id);
+    await this.vehicleRepository.delete(id);
+    return vehicle;
   }
 }
