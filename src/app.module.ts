@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -12,9 +14,13 @@ import { VehiclesModule } from './vehicles/vehicles.module';
       logging: false,
       autoLoadEntities: true,
     }),
-    VehiclesModule,
-  ],
-  controllers: [],
-  providers: [],
+    AuthModule,
+    UsersModule,
+    VehiclesModule
+  ]
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log('🚀 Aplicación inicializada');
+  }
+}

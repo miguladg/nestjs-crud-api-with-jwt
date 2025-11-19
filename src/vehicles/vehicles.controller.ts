@@ -18,8 +18,8 @@ export class VehiclesController {
 
   @Post()
   create(@Body() data: Omit<Vehicle, 'id' | 'createdAt'>): Promise<Vehicle> {
-    console.log('🚗 [Controller] POST /vehicles - Iniciando creación de vehículo');
-    console.log('🚗 [Controller] Datos recibidos:', data);
+    console.log('[Controller] POST /vehicles - Iniciando creación de vehículo');
+    console.log('[Controller] Datos recibidos:', data);
     return this.vehiclesService.create(data);
   }
 

@@ -1,29 +1,26 @@
 FROM node:18-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Install pnpm globally
+# Instalar pnpm
 RUN npm install -g pnpm
 
-# Copy dependency files first (leverage Docker layer caching)
+# Copiar archivos de dependencias
 COPY package.json pnpm-lock.yaml ./
 
-# Install production dependencies
-RUN npm install --frozen-lockfile --prod
+# Instalar dependencias de producción
+RUN pnpm install --prod
 
-# Copy the rest of the application code
+# Copiar el resto del proyecto
 COPY . .
 
-# Ensure Prisma files and environment variables are included
+# Copiar archivos necesarios para Prisma
+COPY .env ./
 COPY prisma ./prisma
-# COPY .env ./
 
-# Build the application
+# Construir la aplicación
 RUN pnpm run build
 
-# Expose the application port
 EXPOSE 3000
 
-# Define the startup command
 CMD ["node", "dist/main.js"]

@@ -17,3 +17,4 @@ export class Vehicle {
   @CreateDateColumn()
   createdAt: Date;
 }
+
