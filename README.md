@@ -1,3 +1,51 @@
+# nestjs-crud-api-with-jwt
+
+Proyecto de ejemplo con NestJS que implementa un CRUD básico y autenticación JWT.
+
+**Características principales**
+- API REST con NestJS
+- Autenticación con JWT
+- Base de datos ligera (SQLite / TypeORM)
+- Configurado para build con `pnpm` y Docker multi-stage
+
+**Requisitos**
+- Node.js 18+
+- `pnpm` (opcional si usas Docker)
+- Docker (opcional)
+
+**Instalación y ejecución local**
+1. Instala dependencias:
+```
+pnpm install
+```
+2. Ejecuta en modo desarrollo:
+```
+pnpm run start:dev
+```
+3. Build y ejecutar producción:
+```
+pnpm run build
+pnpm run start:prod
+```
+
+**Construir y ejecutar con Docker**
+1. Construir la imagen:
+```
+docker build -t miguladg/nestjs-crud-api-with-jwt:latest .
+```
+2. Ejecutar el contenedor (usando `.env` local):
+```
+docker run --rm -p 3000:3000 --env-file .env --name nestjs-crud-api-with-jwt miguladg/nestjs-crud-api-with-jwt:latest
+```
+
+**Notas**
+- Asegúrate de configurar las variables de entorno en `.env` (por ejemplo, la secret de JWT y configuración de DB).
+- Si prefieres SSH para hacer push a GitHub, añade tu clave pública en GitHub → Settings → SSH and GPG keys.
+
+**Contacto**
+- Autor: Miguel Angel Duarte — `migul.a.d.g@gmail.com`
+
+Licencia: sin licencia especificada.
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
