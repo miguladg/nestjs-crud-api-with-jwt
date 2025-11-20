@@ -1,121 +1,429 @@
-# nestjs-crud-api-with-jwt
+# 🚀 NestJS CRUD API con Autenticación JWT
 
-Proyecto de ejemplo con NestJS que implementa un CRUD básico y autenticación JWT.
+API REST profesional construida con NestJS que implementa autenticación JWT, gestión de usuarios y CRUD completo de vehículos con PostgreSQL.
 
-**Características principales**
-- API REST con NestJS
-- Autenticación con JWT
-- Base de datos ligera (SQLite / TypeORM)
-- Configurado para build con `pnpm` y Docker multi-stage
+## 📋 Tabla de Contenidos
 
-**Requisitos**
-- Node.js 18+
-- `pnpm` (opcional si usas Docker)
-- Docker (opcional)
+- [Características](#-características)
+- [Tecnologías](#-tecnologías)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Ejecución](#-ejecución)
+- [Endpoints API](#-endpoints-api)
+- [Documentación Swagger](#-documentación-swagger)
+- [Testing](#-testing)
+- [Docker](#-docker)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Autor](#-autor)
 
-**Instalación y ejecución local**
-1. Instala dependencias:
+## ✨ Características
+
+- ✅ **Autenticación JWT** - Sistema completo de registro y login
+- ✅ **CRUD Completo** - Gestión de vehículos (Create, Read, Update, Delete)
+- ✅ **PostgreSQL** - Base de datos relacional robusta
+- ✅ **TypeORM** - ORM moderno para TypeScript
+- ✅ **Validación de Datos** - class-validator y class-transformer
+- ✅ **Documentación Swagger** - API docs interactiva
+- ✅ **Docker Ready** - Configuración completa con docker-compose
+- ✅ **Testing E2E** - Tests de integración configurados
+- ✅ **Seguridad** - Passwords hasheados con bcryptjs
+- ✅ **TypeScript** - Tipado estático completo
+
+## 🛠 Tecnologías
+
+- **Framework**: NestJS 10.x
+- **Runtime**: Node.js 18+
+- **Lenguaje**: TypeScript 5.x
+- **Base de Datos**: PostgreSQL 16
+- **ORM**: TypeORM 0.3.x
+- **Autenticación**: JWT (JSON Web Tokens)
+- **Validación**: class-validator
+- **Testing**: Jest
+- **Documentación**: Swagger/OpenAPI
+- **Package Manager**: pnpm
+
+## 📦 Requisitos Previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- **Node.js** >= 18.0.0
+- **pnpm** >= 8.0.0 (recomendado) o npm
+- **Docker** y **Docker Compose** (opcional, pero recomendado)
+- **PostgreSQL** 16 (si no usas Docker)
+
+## 🔧 Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/miguladg/nestjs-crud-api-with-jwt.git
+cd nestjs-crud-api-with-jwt
 ```
+
+### 2. Instalar dependencias
+
+```bash
 pnpm install
 ```
-2. Ejecuta en modo desarrollo:
+
+Si usas npm:
+```bash
+npm install
 ```
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=nestdb
+
+# JWT Configuration
+JWT_SECRET=tu_secreto_super_seguro_aqui_cambiar_en_produccion
+JWT_EXPIRES_IN=1d
+
+# Application
+PORT=3000
+NODE_ENV=development
+```
+
+**⚠️ IMPORTANTE**: En producción, usa un `JWT_SECRET` fuerte y único.
+
+## 🚀 Ejecución
+
+### Opción 1: Con Docker (Recomendado)
+
+Inicia todos los servicios (PostgreSQL, pgAdmin y NestJS):
+
+```bash
+docker compose up -d
+```
+
+La aplicación estará disponible en:
+- **API**: http://localhost:3000
+- **Swagger Docs**: http://localhost:3000/api/docs
+- **pgAdmin**: http://localhost:8080 (admin@admin.com / admin123)
+
+Para ver los logs:
+```bash
+docker compose logs -f nestjs
+```
+
+Para detener los servicios:
+```bash
+docker compose down
+```
+
+### Opción 2: Desarrollo Local
+
+1. Inicia PostgreSQL con Docker:
+```bash
+docker compose up -d postgres
+```
+
+2. Ejecuta la aplicación en modo desarrollo:
+```bash
 pnpm run start:dev
 ```
-3. Build y ejecutar producción:
-```
+
+3. La aplicación se reiniciará automáticamente al hacer cambios en el código.
+
+### Opción 3: Producción
+
+1. Construye el proyecto:
+```bash
 pnpm run build
+```
+
+2. Ejecuta la aplicación:
+```bash
 pnpm run start:prod
 ```
 
-**Construir y ejecutar con Docker**
-1. Construir la imagen:
+## 📚 Endpoints API
+
+### 🔐 Autenticación
+
+#### Registrar Usuario
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "Password123!"
+}
 ```
-docker build -t miguladg/nestjs-crud-api-with-jwt:latest .
+
+**Respuesta** (201):
+```json
+{
+  "message": "Usuario registrado exitosamente",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+}
 ```
-2. Ejecutar el contenedor (usando `.env` local):
+
+#### Iniciar Sesión
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "Password123!"
+}
 ```
-docker run --rm -p 3000:3000 --env-file .env --name nestjs-crud-api-with-jwt miguladg/nestjs-crud-api-with-jwt:latest
+
+**Respuesta** (200):
+```json
+{
+  "message": "Login exitoso",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+}
 ```
 
-**Notas**
-- Asegúrate de configurar las variables de entorno en `.env` (por ejemplo, la secret de JWT y configuración de DB).
-- Si prefieres SSH para hacer push a GitHub, añade tu clave pública en GitHub → Settings → SSH and GPG keys.
+### 🚗 Vehículos (Requiere JWT)
 
-**Contacto**
-- Autor: Miguel Angel Duarte — `migul.a.d.g@gmail.com`
+#### Obtener Todos los Vehículos
+```http
+GET /vehicles
+Authorization: Bearer {token}
+```
 
-Licencia: sin licencia especificada.
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+#### Obtener Vehículo por ID
+```http
+GET /vehicles/:id
+Authorization: Bearer {token}
+```
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+#### Crear Vehículo
+```http
+POST /vehicles
+Authorization: Bearer {token}
+Content-Type: application/json
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+{
+  "make": "Toyota",
+  "model": "Corolla",
+  "year": 2023,
+  "description": "Sedán 4 puertas, color blanco"
+}
+```
 
-## Description
+#### Actualizar Vehículo
+```http
+PATCH /vehicles/:id
+Authorization: Bearer {token}
+Content-Type: application/json
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+{
+  "year": 2024,
+  "description": "Actualizado"
+}
+```
 
-## Installation
+#### Eliminar Vehículo
+```http
+DELETE /vehicles/:id
+Authorization: Bearer {token}
+```
+
+## 📖 Documentación Swagger
+
+Accede a la documentación interactiva de la API en:
+
+**http://localhost:3000/api/docs**
+
+Swagger proporciona:
+- 📝 Documentación completa de todos los endpoints
+- 🧪 Interfaz para probar los endpoints directamente
+- 🔐 Autenticación JWT integrada
+- 📊 Modelos de datos y ejemplos
+- ✅ Códigos de respuesta HTTP
+
+### Cómo usar Swagger con JWT:
+
+1. Abre http://localhost:3000/api/docs
+2. Ejecuta `POST /auth/login` para obtener un token
+3. Copia el `access_token` de la respuesta
+4. Haz clic en el botón **"Authorize"** (🔒) en la parte superior
+5. Pega el token y haz clic en **"Authorize"**
+6. Ahora puedes probar todos los endpoints protegidos
+
+## 🧪 Testing
+
+### Tests E2E
+
+Ejecuta los tests de integración:
 
 ```bash
-$ pnpm install
+# Todos los tests
+pnpm run test:e2e
+
+# Test específico de vehículos
+pnpm run test:e2e -- vehicle.post
 ```
 
-## Running the app
+### Script de Prueba con cURL
+
+Prueba rápida del endpoint POST /vehicles:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+chmod +x scripts/test-create-vehicle.sh
+./scripts/test-create-vehicle.sh
 ```
 
-## Test
+## 🐳 Docker
+
+### Servicios Disponibles
+
+El `docker-compose.yml` incluye:
+
+1. **postgres** - Base de datos PostgreSQL 16
+   - Puerto: 5432
+   - Usuario: nestuser
+   - Password: nestpass
+   - Database: nestdb
+
+2. **pgadmin** - Interfaz web para PostgreSQL
+   - Puerto: 8080
+   - Email: admin@admin.com
+   - Password: admin123
+
+3. **nestjs** - Aplicación NestJS
+   - Puerto: 3000
+
+### Comandos Docker Útiles
 
 ```bash
-# unit tests
-$ pnpm run test
+# Iniciar todos los servicios
+docker compose up -d
 
-# e2e tests
-$ pnpm run test:e2e
+# Ver logs en tiempo real
+docker compose logs -f
 
-# test coverage
-$ pnpm run test:cov
+# Detener servicios
+docker compose down
+
+# Reconstruir imágenes
+docker compose up --build
+
+# Eliminar volúmenes (⚠️ elimina datos)
+docker compose down -v
+
+# Ejecutar comando dentro del contenedor
+docker compose exec nestjs sh
 ```
 
-## Support
+## 📁 Estructura del Proyecto
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+nestjs-crud-api-with-jwt/
+├── src/
+│   ├── auth/                 # Módulo de autenticación
+│   │   ├── dto/             # DTOs de login/register
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
+│   │   ├── auth.module.ts
+│   │   └── jwt.strategy.ts  # Estrategia JWT Passport
+│   ├── users/               # Módulo de usuarios
+│   │   ├── user.entity.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── vehicles/            # Módulo de vehículos
+│   │   ├── dto/            # DTOs create/update
+│   │   ├── vehicle.entity.ts
+│   │   ├── vehicles.controller.ts
+│   │   ├── vehicles.service.ts
+│   │   └── vehicles.module.ts
+│   ├── app.module.ts        # Módulo principal
+│   └── main.ts              # Entry point + Swagger config
+├── test/                    # Tests E2E
+│   ├── vehicle.post.e2e-spec.ts
+│   └── jest-e2e.json
+├── scripts/                 # Scripts de utilidad
+│   └── test-create-vehicle.sh
+├── docker-compose.yml       # Configuración Docker
+├── Dockerfile              # Imagen Docker
+├── .env                    # Variables de entorno
+├── package.json
+├── tsconfig.json
+└── README.md
+```
 
-## Stay in touch
+## 🔒 Seguridad
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- ✅ Passwords hasheados con **bcryptjs**
+- ✅ JWT con expiración configurable
+- ✅ Validación de datos con **class-validator**
+- ✅ Variables de entorno para secretos
+- ✅ Guards de autenticación en rutas protegidas
 
-## License
+**⚠️ Recomendaciones de Producción:**
+- Cambia `JWT_SECRET` a un valor fuerte y único
+- Usa HTTPS
+- Implementa rate limiting
+- Habilita CORS de manera restrictiva
+- Usa variables de entorno seguras (no commitees `.env`)
 
-Nest is [MIT licensed](LICENSE).
+## 📝 Scripts Disponibles
+
+```bash
+# Desarrollo
+pnpm run start:dev          # Modo watch con hot-reload
+
+# Producción
+pnpm run build              # Compilar TypeScript
+pnpm run start:prod         # Ejecutar versión compilada
+
+# Testing
+pnpm run test               # Tests unitarios
+pnpm run test:e2e           # Tests E2E
+pnpm run test:cov           # Coverage de tests
+
+# Linting
+pnpm run lint               # Ejecutar ESLint con fix
+```
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 👨‍💻 Autor
+
+**Miguel Angel Duarte**
+- Email: migul.a.d.g@gmail.com
+- GitHub: [@miguladg](https://github.com/miguladg)
+
+## 📄 Licencia
+
+Este proyecto no tiene licencia especificada. Contacta al autor para más información.
+
+---
+
+⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub
