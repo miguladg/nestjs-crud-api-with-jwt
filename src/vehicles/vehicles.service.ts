@@ -32,8 +32,10 @@ export class VehiclesService {
   }
 
   async delete(id: number): Promise<Vehicle> {
+    console.log('Iniciando eliminación de vehículo en base de datos');
     const vehicle = await this.findOne(id);
     await this.vehicleRepository.delete(id);
-    return vehicle;
+    console.log('Vehículo eliminado exitosamente:', vehicle);
+    return vehicle; //quiero des fragmetar el vehicle y  
   }
 }
