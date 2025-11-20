@@ -9,6 +9,7 @@ export class VehiclesController {
   @Get()
   findAll(): Promise<vehicles[]> {
     return this.vehiclesService.findAll();
+      // falta poner try catch para capturar el error, ya que si no hay datos devuelve un array vacio
   }
 
   @Get(':id')
@@ -18,7 +19,6 @@ export class VehiclesController {
 
   @Post()
   create(@Body() data: Omit<vehicles, 'id' | 'createdAt'>): Promise<vehicles> {
-    console.log('[Controller] POST /vehicles - Iniciando creación de vehículo');
     console.log('[Controller] Datos recibidos:', data);
     return this.vehiclesService.create(data);
   }

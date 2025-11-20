@@ -15,6 +15,7 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     console.log('Buscando email:', email);
     const user = await this.userRepository.findOne({ where: { email } });
+    //// poner try catch, ya que si no encuentra el email debe decir poque
     return user;
   }
 
