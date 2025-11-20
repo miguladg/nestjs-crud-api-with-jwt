@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/vehicles';
+const API_URL = 'http://nestjs:3000/vehicles';
 
 const vehicles = [
   { make: 'Toyota', model: 'Corolla', year: 2023, description: 'Sedán compacto confiable' },
