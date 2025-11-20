@@ -1,6 +1,6 @@
 # 🚀 NestJS CRUD API con Autenticación JWT
 
-API REST profesional construida con NestJS que implementa autenticación JWT, gestión de usuarios y CRUD completo de vehículos con PostgreSQL.
+API REST prueba tecnica de Motai con NestJS que implementa autenticación JWT, gestión de usuarios y CRUD completo de vehículos con PostgreSQL.
 
 ## 📋 Tabla de Contenidos
 
@@ -12,7 +12,6 @@ API REST profesional construida con NestJS que implementa autenticación JWT, ge
 - [Ejecución](#-ejecución)
 - [Endpoints API](#-endpoints-api)
 - [Documentación Swagger](#-documentación-swagger)
-- [Testing](#-testing)
 - [Docker](#-docker)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Autor](#-autor)
@@ -269,20 +268,6 @@ Swagger proporciona:
 5. Pega el token y haz clic en **"Authorize"**
 6. Ahora puedes probar todos los endpoints protegidos
 
-## 🧪 Testing
-
-### Tests E2E
-
-Ejecuta los tests de integración:
-
-```bash
-# Todos los tests
-pnpm run test:e2e
-
-# Test específico de vehículos
-pnpm run test:e2e -- vehicle.post
-```
-
 ### Script de Prueba con cURL
 
 Prueba rápida del endpoint POST /vehicles:
@@ -385,45 +370,9 @@ nestjs-crud-api-with-jwt/
 - Habilita CORS de manera restrictiva
 - Usa variables de entorno seguras (no commitees `.env`)
 
-## 📝 Scripts Disponibles
-
-```bash
-# Desarrollo
-pnpm run start:dev          # Modo watch con hot-reload
-
-# Producción
-pnpm run build              # Compilar TypeScript
-pnpm run start:prod         # Ejecutar versión compilada
-
-# Testing
-pnpm run test               # Tests unitarios
-pnpm run test:e2e           # Tests E2E
-pnpm run test:cov           # Coverage de tests
-
-# Linting
-pnpm run lint               # Ejecutar ESLint con fix
-```
-
-## 🤝 Contribuir
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
 ## 👨‍💻 Autor
 
 **Miguel Angel Duarte**
 - Email: migul.a.d.g@gmail.com
 - GitHub: [@miguladg](https://github.com/miguladg)
 
-## 📄 Licencia
-
-Este proyecto no tiene licencia especificada. Contacta al autor para más información.
-
----
-
-⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub
