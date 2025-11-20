@@ -1,25 +1,33 @@
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
 # Instalar pnpm
 RUN npm install -g pnpm
 
-# Copiar archivos de dependencias
+# Copiar archivos de dependencias e instalar todas las dependencias (dev incl.)
 COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
 
-# Instalar dependencias de producción
+# Copiar el resto del proyecto y compilar
+COPY . .
+RUN pnpm run build
+
+FROM node:18-alpine AS runner
+
+WORKDIR /app
+
+# Instalar pnpm (en el runner solo para instalaciones de prod)
+RUN npm install -g pnpm
+
+# Copiar package/lock y solo instalar dependencias de producción
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod
 
-# Copiar el resto del proyecto
-COPY . .
-
-# Copiar archivos necesarios para Prisma
+# Copiar artefactos de build y archivos necesarios (prisma, env)
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
 COPY .env ./
-COPY prisma ./prisma
-
-# Construir la aplicación
-RUN pnpm run build
 
 EXPOSE 3000
 
