@@ -46,10 +46,10 @@ services:
   seed:
     image: node:20-alpine
     container_name: vehicle_seed
+    working_dir: /scripts
     volumes:
       - ./scripts:/scripts
-    working_dir: /scripts
-    command: node seed-vehicles.js
+    command: sh -c "sleep 10 && node seed-vehicles.js"
     depends_on:
       - nestjs
     restart: "no"
