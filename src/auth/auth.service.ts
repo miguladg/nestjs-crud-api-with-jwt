@@ -14,39 +14,36 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    console.log('[AuthService] Datos recibidos:', { username: registerDto.username, email: registerDto.email });
+    console.log('registro recibido', { username: registerDto.username, email: registerDto.email });
     
     const { username, email, password } = registerDto;
 
-    // Verificar si el usuario ya existe
-    console.log('Verificando si el email ya existe');
+    console.log('verificando email', email);
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
-      console.log('Email ya registrado');
-      throw new ConflictException('El email ya está registrado');
+      console.log('email existe');
+      throw new ConflictException('El email ya esta registrado');
     }
-    console.log('email disponible');
+    console.log('email ok');
 
-    // Hashear la contraseña
-    console.log('hasheando contraseña ');
+    console.log('hash contrasenia');
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('[Contraseña hasheada');
+    console.log('contraseña hasheada');
 
-    // Crear el usuario
-    console.log('guardando usuario en base de dato');
+    console.log('guardando usuario');
     const user = await this.usersService.create({
       username,
       email,
       password: hashedPassword,
     });
+    console.log('usuario guardado', { id: user.id });
 
-    // Generar token JWT
-    console.log('generando token jwt');
+    console.log('generando token');
     const payload = { sub: user.id, email: user.email, username: user.username };
     const token = this.jwtService.sign(payload);
     console.log('token generado');
 
-    console.log('REGISTRO COMPLETADO');
+    console.log('registro completado');
     return {
       message: 'Usuario registrado exitosamente',
       access_token: token,
@@ -59,36 +56,32 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    console.log('ingreso con usuario');
-    console.log('[AuthService] Email:', loginDto.email);
+    console.log('login recibido', loginDto.email);
     
     const { email, password } = loginDto;
 
-    // Buscar el usuario
-    console.log('buscando usuario');
+    console.log('buscando usuario', email);
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       console.log('usuario no encontrado');
-      throw new UnauthorizedException('Credenciales inválidas');
+      throw new UnauthorizedException('Credenciales invalida');
     }
-    console.log('[Uasuario encontrado:', user.username);
+    console.log('usuario encontrado');
 
-    // Verificar la contraseña
-    console.log('verificando contrasena...');
+    console.log('verificando contraseña');
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      console.log('contraseña incorrecta');
-      throw new UnauthorizedException('Credenciales inválidas');
+      console.log('contraseña invalida');
+      throw new UnauthorizedException('Credenciales invalida');
     }
-    console.log('contraseña correcta');
+    console.log('contrasenia ok');
 
-    // Generar token JWT
-    console.log('generando token JWT');
+    console.log('generando token');
     const payload = { sub: user.id, email: user.email, username: user.username };
     const token = this.jwtService.sign(payload);
-    console.log('Token generado');
+    console.log('token generado');
 
-    console.log('LOGIN COMPLETADO');
+    console.log('login completado');
     return {
       message: 'Login exitoso',
       access_token: token,
@@ -101,9 +94,13 @@ export class AuthService {
   }
 
   async validateUser(userId: number) {
-    console.log('Lalidando usuario con id', userId);
+    console.log('validando usuario', userId);
     const user = await this.usersService.findById(userId);
-    console.log('[AuthService] Resultado validación:', user ? 'Usuario válido' : 'Usuario no válido');
+    if (!user) {
+      console.log('usuario no válido');
+      return null;
+    }
+    console.log('usuario válido');
     return user;
   }
 }

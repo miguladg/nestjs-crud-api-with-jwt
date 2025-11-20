@@ -11,19 +11,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
     });
-    console.log('estrategia JWT inicializada');
+    console.log('estrategia jwt inicializada');
   }
 
   async validate(payload: any) {
-    console.log('validando token', 'payload:', payload);
+    console.log('validando token');
     
     const user = await this.authService.validateUser(payload.sub);
     if (!user) {
-      console.log('usuario no valido');
+      console.log('usuario no válido');
       throw new UnauthorizedException();
     }
     
-    console.log('usuario validado:', user.username);
+    console.log('usuario válido');
     return user;
   }
 }
