@@ -26,9 +26,11 @@ export class AuthService {
     }
     console.log('email ok');
 
-    console.log('hash contrasenia');
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('contraseña hasheada');
+    // console.log('hashs contrasenia');
+    const hashedPassword = await bcrypt.hash(password, 5);
+
+    /// Falta poner un try catch ya que se rompe si hay un usuario duplicado
+    /// tanto en username como en email
 
     console.log('guardando usuario');
     const user = await this.usersService.create({
@@ -36,7 +38,7 @@ export class AuthService {
       email,
       password: hashedPassword,
     });
-    console.log('usuario guardado', { id: user.id });
+    // console.log('usuario guardado', { id: user.id });
 
     console.log('generando token');
     const payload = { sub: user.id, email: user.email, username: user.username };
@@ -56,7 +58,6 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    console.log('login recibido', loginDto.email);
     
     const { email, password } = loginDto;
 
@@ -74,12 +75,12 @@ export class AuthService {
       console.log('contraseña invalida');
       throw new UnauthorizedException('Credenciales invalida');
     }
-    console.log('contrasenia ok');
+    // console.log('contrasenia ok');
 
-    console.log('generando token');
+    // console.log('generando token');
     const payload = { sub: user.id, email: user.email, username: user.username };
     const token = this.jwtService.sign(payload);
-    console.log('token generado');
+    console.log('token generado', token);
 
     console.log('login completado');
     return {
