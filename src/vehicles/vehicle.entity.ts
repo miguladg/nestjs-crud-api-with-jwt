@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
-@Entity('Vehicle')
-export class Vehicle {
+@Entity('vehicles')
+export class vehicles {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,6 +13,9 @@ export class Vehicle {
 
   @Column()
   year: number;
+
+  @Column({ nullable: true })
+  description?: string;
 
   @CreateDateColumn()
   createdAt: Date;
