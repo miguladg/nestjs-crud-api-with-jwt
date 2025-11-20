@@ -43,5 +43,16 @@ services:
     depends_on:
       - postgres
 
+  seed:
+    image: node:20-alpine
+    container_name: vehicle_seed
+    volumes:
+      - ./scripts:/scripts
+    working_dir: /scripts
+    command: node seed-vehicles.js
+    depends_on:
+      - nestjs
+    restart: "no"
+
 volumes:
   postgres_data:
