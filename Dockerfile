@@ -5,9 +5,18 @@ WORKDIR /app
 # Instalar pnpm
 RUN npm install -g pnpm
 
+# Dependencias necesarias para compilar módulos nativos (better-sqlite3)
+RUN apk add --no-cache build-base python3 linux-headers
+
 # Copiar archivos de dependencias e instalar todas las dependencias (dev incl.)
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
+
+# Forzar compilación del binding nativo de better-sqlite3 (alpine/linux)
+RUN pnpm rebuild better-sqlite3 --build-from-source || true
+
+# Opcional: eliminar herramientas de compilación si no son necesarias más adelante
+RUN apk del build-base linux-headers || true
 
 # Copiar el resto del proyecto y compilar
 COPY . .
