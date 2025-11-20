@@ -6,7 +6,8 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 # Dependencias necesarias para compilar módulos nativos (better-sqlite3)
-RUN apk add --no-cache build-base python3 linux-headers
+# `sqlite-dev` proporciona las cabeceras necesarias para compilar bindings de sqlite
+RUN apk add --no-cache build-base python3 linux-headers sqlite-dev
 
 # Copiar archivos de dependencias e instalar todas las dependencias (dev incl.)
 COPY package.json pnpm-lock.yaml ./
@@ -16,7 +17,8 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm rebuild better-sqlite3 --build-from-source || true
 
 # Opcional: eliminar herramientas de compilación si no son necesarias más adelante
-RUN apk del build-base linux-headers || true
+# mantenemos sqlite-dev hasta después de la compilación, y luego limpiamos
+RUN apk del build-base linux-headers sqlite-dev || true
 
 # Copiar el resto del proyecto y compilar
 COPY . .
