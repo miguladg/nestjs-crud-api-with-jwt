@@ -10,6 +10,6 @@ import { User } from './user.entity';
 })
 export class UsersModule {
   constructor() {
-    console.log('[UsersModule] ✅ Módulo de usuarios cargado');
+    console.log('modulo de usuarios cargado');
   }
 }
